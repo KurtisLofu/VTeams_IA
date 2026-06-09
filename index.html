@@ -2,132 +2,118 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Equipos Vóley</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vóley裝 Móvil Táctico</title>
     <style>
         :root {
-            --azul: #1e3a8a;
-            --naranja: #ea580c;
+            --azul: #1e40af;
+            --naranja: #c2410c;
             --azul-light: #3b82f6;
             --naranja-light: #f97316;
         }
+        * { box-sizing: border-box; }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             margin: 0;
-            padding: 10px;
-            background-color: #f3f4f6;
-            color: #333;
+            padding: 8px;
+            background-color: #111827;
+            color: #f3f4f6;
         }
-        h1, h2 { text-align: center; margin: 10px 0; }
-        .container { max-width: 900px; margin: 0 auto; }
+        h1, h2, h3 { text-align: center; margin: 8px 0; font-weight: 800; }
+        h1 { font-size: 1.4rem; color: #f59e0b; }
         
-        /* Secciones */
+        .container { max-width: 100%; margin: 0 auto; }
+        
         .card {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 15px;
+            background: #1f2937;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #374151;
         }
         
-        /* Formulario y Jugadores */
-        .flex-input { display: flex; gap: 10px; margin-bottom: 15px; }
-        .flex-input input { flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
-        button {
-            background-color: #2563eb; color: white; border: none;
-            padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold;
+        /* Configuración de jugadores */
+        .flex-input { display: flex; gap: 8px; margin-bottom: 10px; }
+        .flex-input input { 
+            flex: 1; padding: 12px; border: 1px solid #4b5563; 
+            border-radius: 8px; background: #374151; color: white; font-size: 1rem;
         }
-        button:hover { opacity: 0.9; }
+        button {
+            background-color: #3b82f6; color: white; border: none;
+            padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1rem;
+        }
         
         .player-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 10px;
-            max-height: 180px;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 8px;
+            max-height: 140px;
             overflow-y: auto;
-            padding: 5px;
-            border: 1px solid #eee;
-            border-radius: 4px;
+            padding: 4px;
         }
         .player-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: #f9fafb;
-            padding: 6px 10px;
-            border-radius: 4px;
-            border: 1px solid #e5e7eb;
+            background: #374151;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.9rem;
         }
-        .player-item.selected { background: #d1fae5; border-color: #10b981; }
-        .player-item span { cursor: pointer; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .btn-del { background: none; color: #ef4444; border: none; cursor: pointer; font-size: 16px; padding: 0 5px; }
+        .player-item.selected { background: #065f46; border: 1px solid #10b981; }
+        .player-item span { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .btn-del { background: none; color: #ef4444; border: none; font-size: 1.2rem; padding: 0 4px; }
 
-        /* Opciones de Generación */
-        .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center; }
-        select { padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
+        /* Controles de Generación */
+        .controls { display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap; }
+        select { padding: 10px; border-radius: 8px; background: #374151; color: white; border: 1px solid #4b5563; font-size: 1rem; }
         .btn-gen { background-color: #10b981; }
-        .btn-reroll { background-color: #f59e0b; }
+        .btn-reroll { background-color: #d97706; }
 
-        /* PISTA DE VÓLEY (Estructura de campo a campo) */
+        /* PISTA VERTICAL ENORME */
         .court {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            background-color: #eab308; /* Bordes de la pista */
-            padding: 12px;
-            border-radius: 8px;
-            gap: 6px; /* Simula la red central */
-            position: relative;
-            margin-top: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            background-color: #ca8a04; 
+            padding: 10px;
+            border-radius: 14px;
+            margin-top: 10px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            min-height: calc(100vh - 340px); 
         }
         
-        /* Red central visual */
-        .court::before {
-            content: 'RED';
-            color: rgba(255,255,255,0.6);
-            font-size: 10px;
-            font-weight: bold;
+        .side {
+            flex: 1;
+            padding: 8px;
+            position: relative;
+            border: 3px solid white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+        
+        .side.azul { background-color: var(--azul); border-bottom: none; border-radius: 8px 8px 0 0; }
+        .side.naranja { background-color: var(--naranja); border-top: none; border-radius: 0 0 8px 8px; }
+        
+        /* Red Horizontal en el medio */
+        .net {
+            background: #4b5563;
+            color: #fff;
+            height: 10px;
+            width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: absolute; top: 0; bottom: 0; left: 50%;
-            width: 6px; background: #374151; transform: translateX(-50%); z-index: 4;
+            font-size: 9px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            z-index: 10;
+            border-left: 3px solid white;
+            border-right: 3px solid white;
         }
 
-        .side {
-            padding: 10px; min-height: 280px; position: relative;
-            border: 2px solid white;
-            display: flex;
-            flex-direction: column;
-        }
-        .side h3 { text-align: center; margin: 5px 0 15px 0; font-size: 1.1em; text-transform: uppercase; letter-spacing: 1px;}
-        .side.azul { background-color: var(--azul); color: white; }
-        .side.naranja { background-color: var(--naranja); color: white; }
-        
-        /* GRID DE POSICIONES (Filas de 3) */
-        .positions-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px 10px;
-            flex-grow: 1;
-            align-content: space-around;
-        }
-
-        /* En vóley el equipo de la izquierda tiene la red a su derecha y el de la derecha a su izquierda */
-        /* Reorganizamos visualmente las filas para que la línea de ataque esté siempre pegada a la red */
-        #players-azul {
-            /* Ataque a la derecha (columnas 2 y 3 en la lógica de filas, pero aquí invertimos el orden de las filas) */
-            display: flex;
-            flex-direction: column-reverse; /* Hace que los ataques queden pegados a la red (derecha) */
-            gap: 20px;
-        }
-        #players-naranja {
-            /* Ataque a la izquierda, por defecto el orden normal va bien */
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
+        /* Filas de 3 Jugadores */
         .court-row {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -135,88 +121,92 @@
             width: 100%;
         }
 
-        /* Jugadores en la pista (Formato Ficha) */
+        /* Fichas de Jugador GIGANTES */
         .court-player {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 8px 4px;
-            border-radius: 6px;
-            font-size: 0.85em;
-            text-align: center;
-            min-height: 65px;
-            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.18);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            padding: 12px 4px;
+            border-radius: 10px;
+            min-height: 85px;
             position: relative;
+            box-shadow: inset 0 1px 2px rgba(255,255,255,0.2);
         }
         .court-player .name {
+            font-size: 1.15rem; 
             font-weight: bold;
-            word-break: break-word;
-            margin-bottom: 6px;
-            max-width: 100%;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+            word-break: break-all;
+            text-align: center;
+            margin-bottom: 8px;
         }
-        .court-player .actions { display: flex; gap: 4px; }
+        .court-player .actions { display: flex; gap: 8px; width: 100%; justify-content: center; }
         .court-player button { 
-            padding: 2px 5px; 
-            font-size: 0.75em; 
-            background: rgba(0,0,0,0.4); 
-            border-radius: 3px;
-        }
-        .court-player button.active-lock { background: #ef4444; }
-
-        /* Hueco vacío en la posición si faltan jugadores */
-        .empty-slot {
-            border: 1px dashed rgba(255,255,255,0.2);
-            background: rgba(0,0,0,0.05);
+            padding: 6px 10px; 
+            font-size: 1rem; 
+            background: rgba(0,0,0,0.6); 
+            border: 1px solid rgba(255,255,255,0.2);
             border-radius: 6px;
-            min-height: 65px;
+        }
+        .court-player button.active-lock { background: #dc2626; border-color: #ef4444; }
+
+        .empty-slot {
+            border: 2px dashed rgba(255,255,255,0.25);
+            background: rgba(0,0,0,0.15);
+            border-radius: 10px;
+            min-height: 85px;
         }
 
-        /* Pelota de Saque */
+        /* Pelota de Saque Flotante */
         .ball {
-            font-size: 22px; position: absolute; top: 8px; cursor: pointer;
-            animation: bounce 0.5s infinite alternate; z-index: 5;
-            background: white; border-radius: 50%; width: 30px; height: 30px;
+            font-size: 28px; position: absolute; cursor: pointer;
+            animation: bounce 0.4s infinite alternate; z-index: 15;
+            background: white; border-radius: 50%; width: 38px; height: 38px;
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.4);
         }
-        .side.azul .ball { left: 10px; }
-        .side.naranja .ball { right: 10px; }
-        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-3px); } }
+        .side.azul .ball { top: 10px; left: 10px; }
+        .side.naranja .ball { bottom: 10px; right: 10px; }
+        @keyframes bounce { from { transform: scale(1); } to { transform: scale(1.1); } }
 
-        /* Modo Multi-equipo (3+ equipos) */
+        /* Vista Multiequipo (3+) */
         .multi-teams {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px; margin-top: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 12px; margin-top: 10px;
         }
         .team-card {
-            background: white; border-radius: 8px; padding: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-top: 5px solid #cbd5e1;
+            background: #1f2937; border-radius: 12px; padding: 14px;
+            border-top: 6px solid #cbd5e1; border: 1px solid #374151;
         }
-        .team-card.t-0 { border-color: var(--azul-light); }
-        .team-card.t-1 { border-color: var(--naranja-light); }
-        .team-card.t-2 { border-color: #10b981; }
-        .team-card.t-3 { border-color: #8b5cf6; }
-        .team-card.t-4 { border-color: #ec4899; }
-        .team-card.t-5 { border-color: #06b6d4; }
+        .team-card h3 { color: white; margin-bottom: 12px; font-size: 1.2rem; }
+        .team-card.t-0 { border-top: 6px solid var(--azul-light); }
+        .team-card.t-1 { border-top: 6px solid var(--naranja-light); }
+        .team-card.t-2 { border-top: 6px solid #10b981; }
+        .team-card.t-3 { border-top: 6px solid #8b5cf6; }
+        .team-card.t-4 { border-top: 6px solid #ec4899; }
+        .team-card.t-5 { border-top: 6px solid #06b6d4; }
         
+        .multi-player-row {
+            display: flex; justify-content: space-between; align-items: center;
+            background: #374151; padding: 10px; border-radius: 8px; margin-bottom: 6px;
+            font-size: 1.1rem; font-weight: bold;
+        }
+        .multi-player-row select { padding: 4px; font-size: 0.9rem; }
+
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🏐 Vóley Team Randomizer </h1>
+    <h1>🏐 VÓLEY TEAM RANDOMIZER</h1>
 
+    <!-- Panel de Gestión -->
     <div class="card">
-        <h2>Jugadores (<span id="count-selected">0</span>/<span id="count-total">0</span>)</h2>
         <div class="flex-input">
             <input type="text" id="player-name" placeholder="Nombre del jugador..." onkeypress="if(event.key === 'Enter') addPlayer()">
             <button onclick="addPlayer()">Añadir</button>
@@ -224,38 +214,40 @@
         <div class="player-list" id="players-container"></div>
     </div>
 
+    <!-- Panel de Mandos -->
     <div class="card controls">
-        <label for="num-teams">Equipos a generar:</label>
-        <select id="num-teams" onchange="toggleViewMode()">
-            <option value="2">2 Equipos (Modo Pista 3x2)</option>
+        <select id="num-teams">
+            <option value="2">2 Equipos (Pista Vertical)</option>
             <option value="3">3 Equipos</option>
             <option value="4">4 Equipos</option>
             <option value="5">5 Equipos</option>
             <option value="6">6 Equipos</option>
         </select>
-        <button class="btn-gen" onclick="generateTeams()">Generar Equipos</button>
+        <button class="btn-gen" onclick="generateTeams()">Generar</button>
         <button class="btn-reroll" onclick="rerollTeams()">Reroll 🔁</button>
     </div>
 
+    <!-- PISTA VERTICAL (2 Equipos) -->
     <div id="court-view" class="court hidden">
+        <!-- Campo Azul (Arriba) -->
         <div class="side azul" id="side-azul">
-            <h3>Equipo Azul</h3>
             <div id="ball-azul" class="ball" onclick="setServer('naranja')">🏐</div>
-            <div id="players-azul">
-                <div class="court-row" id="azul-defensa"></div>
-                <div class="court-row" id="azul-ataque"></div>
-            </div>
+            <div class="court-row" id="azul-defensa"></div>
+            <div class="court-row" id="azul-ataque"></div>
         </div>
+        
+        <!-- Red Central -->
+        <div class="net">RED</div>
+        
+        <!-- Campo Naranja (Abajo) -->
         <div class="side naranja" id="side-naranja">
-            <h3>Equipo Naranja</h3>
             <div id="ball-naranja" class="ball hidden" onclick="setServer('azul')">🏐</div>
-            <div id="players-naranja">
-                <div class="court-row" id="naranja-ataque"></div>
-                <div class="court-row" id="naranja-defensa"></div>
-            </div>
+            <div class="court-row" id="naranja-ataque"></div>
+            <div class="court-row" id="naranja-defensa"></div>
         </div>
     </div>
 
+    <!-- MULTIEQUIPOS (3+ Equipos) -->
     <div id="multi-view" class="multi-teams hidden"></div>
 </div>
 
@@ -263,64 +255,38 @@
     let players = JSON.parse(localStorage.getItem('voley_players')) || [];
     let currentTeams = []; 
     let lockedPlayers = new Set(); 
-    let servingTeam = 'azul'; 
 
-    function saveStorage() {
-        localStorage.setItem('voley_players', JSON.stringify(players));
-    }
+    function saveStorage() { localStorage.setItem('voley_players', JSON.stringify(players)); }
 
     function renderPlayerList() {
         const container = document.getElementById('players-container');
         container.innerHTML = '';
-        
         players.forEach(p => {
             const div = document.createElement('div');
             div.className = `player-item ${p.selected ? 'selected' : ''}`;
-            
-            const span = document.createElement('span');
-            span.textContent = p.name;
-            span.onclick = () => toggleSelectPlayer(p.id);
-            
-            const btn = document.createElement('button');
-            btn.className = 'btn-del';
-            btn.innerHTML = '&times;';
-            btn.onclick = (e) => { e.stopPropagation(); deletePlayer(p.id); };
-            
-            div.appendChild(span);
-            div.appendChild(btn);
+            div.innerHTML = `<span onclick="toggleSelectPlayer('${p.id}')">${p.name}</span>
+                             <button class="btn-del" onclick="deletePlayer('${p.id}')">&times;</button>`;
             container.appendChild(div);
         });
-
-        document.getElementById('count-total').textContent = players.length;
-        document.getElementById('count-selected').textContent = players.filter(p => p.selected).length;
     }
 
     function addPlayer() {
         const input = document.getElementById('player-name');
         const name = input.value.trim();
         if(!name) return;
-        
         players.push({ id: Date.now().toString(), name: name, selected: true });
-        input.value = '';
-        saveStorage();
-        renderPlayerList();
+        input.value = ''; saveStorage(); renderPlayerList();
     }
 
     function deletePlayer(id) {
         players = players.filter(p => p.id !== id);
         lockedPlayers.delete(id);
-        saveStorage();
-        renderPlayerList();
+        saveStorage(); renderPlayerList();
     }
 
     function toggleSelectPlayer(id) {
-        const player = players.find(p => p.id === id);
-        if(player) {
-            player.selected = !player.selected;
-            if(!player.selected) lockedPlayers.delete(id);
-            saveStorage();
-            renderPlayerList();
-        }
+        const p = players.find(p => p.id === id);
+        if(p) { p.selected = !p.selected; if(!p.selected) lockedPlayers.delete(id); saveStorage(); renderPlayerList(); }
     }
 
     function shuffle(array) {
@@ -331,29 +297,29 @@
         return array;
     }
 
+    function randomBallAssignment() {
+        const randomTeam = Math.random() < 0.5 ? 'azul' : 'naranja';
+        setServer(randomTeam);
+    }
+
     function generateTeams() {
         const numTeams = parseInt(document.getElementById('num-teams').value);
         const selectedPlayers = players.filter(p => p.selected).map(p => p.id);
         
-        if(selectedPlayers.length < numTeams) {
-            alert(`Selecciona al menos ${numTeams} jugadores.`);
-            return;
-        }
+        if(selectedPlayers.length < numTeams) { alert(`Mínimo ${numTeams} jugadores seleccionados.`); return; }
 
         currentTeams = Array.from({length: numTeams}, () => []);
         lockedPlayers.clear(); 
 
         const shuffledIds = shuffle([...selectedPlayers]);
-        shuffledIds.forEach((id, index) => {
-            currentTeams[index % numTeams].push(id);
-        });
+        shuffledIds.forEach((id, index) => { currentTeams[index % numTeams].push(id); });
 
+        randomBallAssignment();
         renderTeams();
     }
 
     function rerollTeams() {
         if(currentTeams.length === 0) return generateTeams();
-        
         const numTeams = currentTeams.length;
         const selectedPlayers = players.filter(p => p.selected).map(p => p.id);
         
@@ -363,34 +329,25 @@
         selectedPlayers.forEach(id => {
             if(lockedPlayers.has(id)) {
                 const currentTeamIdx = currentTeams.findIndex(t => t.includes(id));
-                if(currentTeamIdx !== -1) {
-                    lockedByTeam[currentTeamIdx].push(id);
-                } else {
-                    freePlayers.push(id);
-                }
-            } else {
-                freePlayers.push(id);
-            }
+                if(currentTeamIdx !== -1) lockedByTeam[currentTeamIdx].push(id);
+                else freePlayers.push(id);
+            } else { freePlayers.push(id); }
         });
 
         shuffle(freePlayers);
-
         let newTeams = lockedByTeam.map(t => [...t]);
 
         while(freePlayers.length > 0) {
             const id = freePlayers.pop();
-            let minTeamIdx = 0;
-            let minSize = Infinity;
+            let minTeamIdx = 0, minSize = Infinity;
             for(let i=0; i < numTeams; i++) {
-                if(newTeams[i].length < minSize) {
-                    minSize = newTeams[i].length;
-                    minTeamIdx = i;
-                }
+                if(newTeams[i].length < minSize) { minSize = newTeams[i].length; minTeamIdx = i; }
             }
             newTeams[minTeamIdx].push(id);
         }
 
         currentTeams = newTeams;
+        randomBallAssignment();
         renderTeams();
     }
 
@@ -401,16 +358,12 @@
     }
 
     function toggleLock(id) {
-        if(lockedPlayers.has(id)) {
-            lockedPlayers.delete(id);
-        } else {
-            lockedPlayers.add(id);
-        }
+        if(lockedPlayers.has(id)) lockedPlayers.delete(id);
+        else lockedPlayers.add(id);
         renderTeams();
     }
 
     function setServer(team) {
-        servingTeam = team;
         if(team === 'azul') {
             document.getElementById('ball-azul').classList.remove('hidden');
             document.getElementById('ball-naranja').classList.add('hidden');
@@ -420,8 +373,9 @@
         }
     }
 
-    function toggleViewMode() {
-        const numTeams = parseInt(document.getElementById('num-teams').value);
+    // Corregido: Fuerza a las vistas a actualizarse al renderizar los equipos
+    function updateViewVisibility() {
+        const numTeams = currentTeams.length;
         if(numTeams === 2) {
             document.getElementById('court-view').classList.remove('hidden');
             document.getElementById('multi-view').classList.add('hidden');
@@ -432,10 +386,11 @@
     }
 
     function renderTeams() {
-        const numTeams = currentTeams.length;
-        toggleViewMode();
+        if (currentTeams.length === 0) return;
+        
+        updateViewVisibility();
 
-        if (numTeams === 2) {
+        if (currentTeams.length === 2) {
             renderCourtSide(0, 'azul');
             renderCourtSide(1, 'naranja');
         } else {
@@ -443,29 +398,24 @@
         }
     }
 
-    // Renderiza un campo con 3 atacantes (cerca de la red) y 3 defensores (atrás)
     function renderCourtSide(teamIdx, colorName) {
         const ataqueContainer = document.getElementById(`${colorName}-ataque`);
         const defensaContainer = document.getElementById(`${colorName}-defensa`);
-        
-        ataqueContainer.innerHTML = '';
-        defensaContainer.innerHTML = '';
+        ataqueContainer.innerHTML = ''; defensaContainer.innerHTML = '';
         
         const teamPlayerIds = currentTeams[teamIdx] || [];
         
-        // Un equipo de vóley en pista tiene un máximo de 6 posiciones principales.
-        // Posiciones 0,1,2 van a una fila; 3,4,5 van a la otra.
         for (let i = 0; i < 6; i++) {
             const id = teamPlayerIds[i];
             let slotHTML = '';
 
             if (id) {
                 const p = players.find(player => player.id === id);
-                const arrow = colorName === 'azul' ? '➡️' : '⬅️';
+                const arrow = colorName === 'azul' ? '⬇️' : '⬆️';
                 
                 slotHTML = `
                     <div class="court-player">
-                        <div class="name" title="${p.name}">${p.name}</div>
+                        <div class="name">${p.name}</div>
                         <div class="actions">
                             <button class="${lockedPlayers.has(id) ? 'active-lock' : ''}" onclick="toggleLock('${id}')">🔒</button>
                             <button onclick="movePlayer('${id}', ${teamIdx}, ${teamIdx === 0 ? 1 : 0})">${arrow}</button>
@@ -473,34 +423,28 @@
                     </div>
                 `;
             } else {
-                // Hueco vacío si hay menos de 6 jugadores en el equipo
                 slotHTML = `<div class="empty-slot"></div>`;
             }
 
-            // Reparto táctico: primeros 3 jugadores a la línea de ataque, siguientes 3 a la defensa
-            if (i < 3) {
-                ataqueContainer.insertAdjacentHTML('beforeend', slotHTML);
-            } else {
-                defensaContainer.insertAdjacentHTML('beforeend', slotHTML);
-            }
+            if (i < 3) ataqueContainer.insertAdjacentHTML('beforeend', slotHTML);
+            else defensaContainer.insertAdjacentHTML('beforeend', slotHTML);
         }
 
-        // Si hay más de 6 jugadores en este equipo (suplentes), los añadimos abajo de la defensa
         if (teamPlayerIds.length > 6) {
-            const extraIds = teamPlayerIds.slice(6);
-            extraIds.forEach(id => {
+            teamPlayerIds.slice(6).forEach(id => {
                 const p = players.find(player => player.id === id);
-                const arrow = colorName === 'azul' ? '➡️' : '⬅️';
+                const arrow = colorName === 'azul' ? '⬇️' : '⬆️';
                 const extraHTML = `
-                    <div class="court-player" style="grid-column: span 1; background: rgba(0,0,0,0.2);">
-                        <div class="name">${p.name} (Sup)</div>
+                    <div class="court-player" style="background: rgba(0,0,0,0.35);">
+                        <div class="name">${p.name} <span style="font-size:0.8rem;color:#ccc;"><br>(Sup)</span></div>
                         <div class="actions">
                             <button class="${lockedPlayers.has(id) ? 'active-lock' : ''}" onclick="toggleLock('${id}')">🔒</button>
                             <button onclick="movePlayer('${id}', ${teamIdx}, ${teamIdx === 0 ? 1 : 0})">${arrow}</button>
                         </div>
                     </div>
                 `;
-                defensaContainer.insertAdjacentHTML('beforeend', extraHTML);
+                if(colorName === 'azul') defensaContainer.insertAdjacentHTML('afterbegin', extraHTML);
+                else defensaContainer.insertAdjacentHTML('beforeend', extraHTML);
             });
         }
     }
@@ -512,40 +456,25 @@
         currentTeams.forEach((team, teamIdx) => {
             const card = document.createElement('div');
             card.className = `team-card t-${teamIdx}`;
-            
-            const title = document.createElement('h3');
-            title.textContent = `Equipo ${teamIdx + 1}`;
-            card.appendChild(title);
+            card.innerHTML = `<h3>Equipo ${teamIdx + 1} (${team.length})</h3>`;
 
             const ul = document.createElement('div');
-            ul.style.display = 'flex';
-            ul.style.flexDirection = 'column';
-            ul.style.gap = '8px';
-
             team.forEach(id => {
                 const p = players.find(player => player.id === id);
                 if(!p) return;
 
                 let moveOptions = '';
                 for(let i=0; i<currentTeams.length; i++) {
-                    if(i !== teamIdx) {
-                        moveOptions += `<option value="${i}">Mover a E${i+1}</option>`;
-                    }
+                    if(i !== teamIdx) moveOptions += `<option value="${i}">Mover a E${i+1}</option>`;
                 }
 
                 const item = document.createElement('div');
-                item.style.display = 'flex';
-                item.style.justifyContent = 'space-between';
-                item.style.alignItems = 'center';
-                item.style.background = '#f1f5f9';
-                item.style.padding = '5px 10px';
-                item.style.borderRadius = '4px';
-
+                item.className = 'multi-player-row';
                 item.innerHTML = `
                     <span>${p.name}</span>
-                    <div style="display:flex; gap: 4px; align-items:center;">
-                        <button style="padding:2px 6px; font-size:11px;" class="${lockedPlayers.has(id) ? 'active-lock' : ''}" onclick="toggleLock('${id}')">🔒</button>
-                        <select style="padding:2px; font-size:11px;" onchange="movePlayer('${id}', ${teamIdx}, parseInt(this.value))">
+                    <div style="display:flex; gap: 8px;">
+                        <button class="${lockedPlayers.has(id) ? 'active-lock' : ''}" onclick="toggleLock('${id}')">🔒</button>
+                        <select onchange="movePlayer('${id}', ${teamIdx}, parseInt(this.value))">
                             <option value="" disabled selected>🔄</option>
                             ${moveOptions}
                         </select>
@@ -553,7 +482,6 @@
                 `;
                 ul.appendChild(item);
             });
-
             card.appendChild(ul);
             container.appendChild(card);
         });
